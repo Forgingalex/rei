@@ -1,0 +1,7 @@
+openai
+google-genai
+ollama
+python-dotenv
+rich
+pandas
+matplotlib
