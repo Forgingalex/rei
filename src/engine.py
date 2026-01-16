@@ -1,6 +1,5 @@
 import os
 import time
-from google import genai
 from ollama import Client as OllamaClient
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -11,40 +10,18 @@ load_dotenv()
 class AIEngine:
     def __init__(self):
         """
-        Initializes the 2026 Tri-Tier Engine: 
-        1. Cloud (Gemini) - Logic/Judgment
-        2. LPU (Groq) - High-speed inference
-        3. Local (Ollama) - Privacy/Edge compute
+        Initializes the Engine: 
+        1. LPU (Groq) - High-speed inference
+        2. Local (Ollama) - Privacy/Edge compute
         """
-        # 1. Google Gemini Client (Frontier Reasoning)
-        self.gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-        
-        # 2. Ollama Client (Local Privacy)
+        # 1. Ollama Client (Local Privacy)
         self.ollama_client = OllamaClient()
 
-        # 3. Groq Client (Ultra-fast LPU inference)
+        # 2. Groq Client (Ultra-fast LPU inference)
         self.groq_client = OpenAI(
             api_key=os.getenv("GROQ_API_KEY"),
             base_url="https://api.groq.com/openai/v1"
         )
-
-    def query_gemini(self, model_id="gemini-2.0-flash", prompt=""):
-        """Calls Google Cloud's Frontier Models with full usage metadata."""
-        try:
-            start_time = time.time()
-            response = self.gemini_client.models.generate_content(
-                model=model_id,
-                contents=prompt
-            )
-            latency = time.time() - start_time
-            return {
-                "text": response.text,
-                "latency": f"{latency:.2f}s",
-                "tokens": response.usage_metadata.total_token_count,
-                "provider": "Google Cloud"
-            }
-        except Exception as e:
-            return {"text": f"Gemini Error: {str(e)[:50]}...", "latency": "0s", "tokens": 0, "provider": "Google (Fail)"}
 
     def query_groq(self, model_id="llama-3.3-70b-versatile", prompt=""):
         """Calls Groq's LPU for sub-second responses."""
@@ -64,7 +41,7 @@ class AIEngine:
         except Exception as e:
             return {"text": f"Groq Error: {str(e)[:50]}...", "latency": "0s", "tokens": 0, "provider": "Groq (Fail)"}
 
-    def query_ollama(self, model_id="qwen2.5:0.5b", prompt=""):
+    def query_ollama(self, model_id="llama3.2:1b", prompt=""):
         """Calls Local Compute. No API key needed, data never leaves your RAM."""
         try:
             start_time = time.time()
@@ -85,14 +62,12 @@ class AIEngine:
 
     def query(self, provider, prompt, model=None):
         """
-        Unified routing method. Use this in main.py to simplify benchmarking.
-        Usage: engine.query("groq", "Hello!")
+        Unified routing method.
         """
-        if provider == "gemini":
-            return self.query_gemini(model_id=model or "gemini-2.0-flash", prompt=prompt)
-        elif provider == "groq":
+        if provider == "groq":
             return self.query_groq(model_id=model or "llama-3.3-70b-versatile", prompt=prompt)
         elif provider == "local":
-            return self.query_ollama(model_id=model or "qwen2.5:0.5b", prompt=prompt)
+            return self.query_ollama(model_id=model or "llama3.2:1b", prompt=prompt)
         else:
+            # Fallback or error
             raise ValueError(f"Unknown provider: {provider}")

@@ -1,7 +1,7 @@
 openai
-google-genai
 ollama
 python-dotenv
 rich
 pandas
-matplotlib
+chromadb>=0.4.22
+groq>=0.4.0
