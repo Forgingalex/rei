@@ -1,4 +1,4 @@
-# Non-Coercive Superintelligence (REI)
+# Experiment Towards A Non-coercive AI System (rei)
 
 I just finished reading the first chapter of "Introduction to AI Engineering" by O'Reilly, and I decided to stop just reading and actually build something. I wanted to take the concepts of capabilities and control and implement them into a system that actually respects me.
 
