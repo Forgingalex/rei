@@ -3,5 +3,6 @@
 __pycache__/
 logs/*.csv
 logs/*.json
-# We keep the PNG for the README
+# keeping the PNG for the README
 !logs/*.png
+data/chroma_db/
