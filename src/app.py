@@ -1,6 +1,5 @@
 """
 app.py - rei terminal interface
-simple, clean, human-like.
 """
 
 import sys
@@ -20,7 +19,7 @@ from council import Council
 from memory import SovereignMemory
 from auditor import Auditor
 
-# clean setup
+# setup
 console = Console()
 memory = SovereignMemory()
 council = Council(memory=memory)

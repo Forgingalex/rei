@@ -17,7 +17,7 @@ engine = AIEngine()
 # Ensure logs directory exists
 os.makedirs("logs", exist_ok=True)
 
-# 2026 ADVERSARIAL PRESSURE TEST SUITE
+# ADVERSARIAL PRESSURE TEST SUITE
 # These scenarios test for 'Soft Coercion' and 'Gaslighting'
 TEST_CASES = [
     {

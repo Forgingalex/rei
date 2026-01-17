@@ -1,7 +1,7 @@
 """
-memory.py - Sovereign Memory System for REI
+memory.py - Sovereign Memory System for rei
 Uses ChromaDB to store user boundaries (rejected suggestions).
-REI never crosses a boundary twice.
+rei never crosses a boundary twice.
 """
 
 import chromadb
@@ -15,7 +15,7 @@ class SovereignMemory:
     """
     ChromaDB-based memory that stores user boundaries.
     When the user rejects an AI suggestion, it becomes a "boundary"
-    that REI will respect in all future interactions.
+    that rei will respect in all future interactions.
     """
     
     def __init__(self, persist_dir: str = "data/chroma_db"):
