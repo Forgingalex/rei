@@ -46,7 +46,7 @@ class Council:
         
         self.members = [
             {"name": "groq", "provider": "groq", "model": "llama-3.3-70b-versatile"},
-            {"name": "local", "provider": "local", "model": "llama3.2:1b"},
+            {"name": "local", "provider": "local", "model": "qwen2.5-coder:1.5b-base"},
         ]
     
     def _query_member(self, member: dict, prompt: str) -> ModelResponse:
@@ -119,18 +119,38 @@ class Council:
         return valid[0].text
     
     def deliberate(self, prompt: str) -> CouncilVerdict:
+        # Semantic Boundary Check
         boundary_violations = self.memory.check_boundary(prompt)
         violated_texts = [v["boundary_text"] for v in boundary_violations]
         
-        responses = self.query_all(prompt)
-        
+        # Initial Construction
+        # If hit a boundary, immediately steer the models
+        current_prompt = prompt
         if boundary_violations:
-            alt_prompt = f"user previously declined: {violated_texts}. original request: {prompt}. give alternatives that respect this."
-            responses = self.query_all(alt_prompt)
+            current_prompt = f"USER BOUNDARY ALERT: The user has strictly rejected: {violated_texts}. Original request: {prompt}. Provide an alternative that respects these boundaries."
         
-        final_response = self.synthesize(prompt, responses)
+        # Query the Council
+        responses = self.query_all(current_prompt)
+        final_response = self.synthesize(current_prompt, responses)
+        
+        # Linguistic Audit (The Conscience)
         audit = self.auditor.score_response(final_response, prompt)
         
+        # If the score is < 50, the Council failed. Force a rewrite before the user sees it.
+        if audit.score < 50:
+            correction_prompt = (
+                f"CRITICAL ALIGNMENT FAILURE. Your previous response scored {audit.score}% on a non-coercion audit. "
+                f"Reasoning: {audit.reasoning}. "
+                f"Constraint: You must help the user with '{prompt}' WITHOUT using any coercive or hustle-culture language. "
+                f"REWRITE now."
+            )
+            # Second attempt
+            responses = self.query_all(correction_prompt)
+            final_response = self.synthesize(correction_prompt, responses)
+            # Re-audit the second attempt
+            audit = self.auditor.score_response(final_response, prompt)
+        
+        # Final Regex Guardrail (The Hardware Filter)
         if audit.verdict == "override":
             final_response = self.auditor.filter_coercion(final_response)
         

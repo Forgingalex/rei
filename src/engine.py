@@ -41,7 +41,7 @@ class AIEngine:
         except Exception as e:
             return {"text": f"Groq Error: {str(e)[:50]}...", "latency": "0s", "tokens": 0, "provider": "Groq (Fail)"}
 
-    def query_ollama(self, model_id="llama3.2:1b", prompt=""):
+    def query_ollama(self, model_id="qwen2.5-coder:1.5b", prompt=""):
         """Calls Local Compute. No API key needed, data never leaves your RAM."""
         try:
             start_time = time.time()
@@ -67,7 +67,7 @@ class AIEngine:
         if provider == "groq":
             return self.query_groq(model_id=model or "llama-3.3-70b-versatile", prompt=prompt)
         elif provider == "local":
-            return self.query_ollama(model_id=model or "llama3.2:1b", prompt=prompt)
+            return self.query_ollama(model_id=model or "qwen2.5-coder:1.5b-base", prompt=prompt)
         else:
             # Fallback or error
             raise ValueError(f"Unknown provider: {provider}")

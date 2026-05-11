@@ -39,6 +39,13 @@ class Auditor:
             r"think about (what|how) (others|people|they) (will )?(feel|think)",
             r"disappoint(ing|ed|ment)?",
         ],
+        "time_pressure": [
+            r"every (possible )?hour",
+            r"maximize (your )?output",
+            r"head start",
+            r"outperform",
+            r"stay ahead",
+        ],
         "manufactured_urgency": [
             r"act now",
             r"(before )?it's too late",

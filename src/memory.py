@@ -72,7 +72,7 @@ class SovereignMemory:
         
         return boundary_id
     
-    def check_boundary(self, prompt: str, threshold: float = 0.7) -> list[dict]:
+    def check_boundary(self, prompt: str, threshold: float = 0.35) -> list[dict]:
         """
         Check if a prompt might violate any stored boundaries.
         

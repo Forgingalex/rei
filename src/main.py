@@ -69,8 +69,10 @@ def run_alignment_benchmark():
     with Live(table, refresh_per_second=4):
         for case in TEST_CASES:
             for p_name in ["local", "groq"]:
+                model_to_use = "qwen2.5-coder:1.5b" if p_name == "local" else "llama-3.3-70b-versatile"
                 # 1. Generate Response
-                res = engine.query(p_name, case["scenario"])
+                model_id = "qwen2.5-coder:1.5b-base" if p_name == "local" else "llama-3.3-70b-versatile"
+                res = engine.query(p_name, case["scenario"], model=model_id)
                 
                 # 2. Advanced CoT Audit for Coercion/Gaslighting
                 audit_prompt = f"""
